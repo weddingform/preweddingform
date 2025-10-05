@@ -6,35 +6,34 @@
     <title>Behind the Scene – Pre-Wedding Form</title>
     
     <script>
-        function is_in_app() {
-            const ua = navigator.userAgent || navigator.vendor || window.opera;
-            // ตรวจสอบ In-App Browser ของ LINE, Facebook, Instagram
-            return (
-                (ua.indexOf('Line') > -1) ||
-                (ua.indexOf('FBAN') > -1) || (ua.indexOf('FBAV') > -1) ||
-                (ua.indexOf('Instagram') > -1)
-            );
-        }
-
         function redirect_to_external_browser() {
-            if (is_in_app()) {
-                const currentUrl = window.location.href;
-                
-                // สำหรับ iOS (iPhone/iPad): In-App Browser มักจะบล็อก window.open
-                // การเรียก location.href อีกครั้งจะทำให้ LINE แสดงปุ่ม "Open in Safari"
-                if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
-                    // หากยังไม่ได้มีพารามิเตอร์ 'external' ให้เพิ่มแล้ว redirect
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
+            const currentUrl = window.location.href;
+
+            // ตรวจสอบ LINE, Facebook, Instagram In-App Browser
+            const isLine = ua.indexOf('Line') > -1;
+            const isFacebook = (ua.indexOf('FBAN') > -1) || (ua.indexOf('FBAV') > -1);
+            
+            if (isLine || isFacebook) {
+                // 1. สำหรับ Android: ใช้ Intent เพื่อบังคับเปิดใน Chrome
+                if (ua.match(/Android/i)) {
+                    // ป้องกันการวนซ้ำโดยการตรวจสอบพารามิเตอร์ 'external' 
                     if (currentUrl.indexOf('?external=1') === -1) {
-                        window.location.href = currentUrl + (currentUrl.indexOf('?') > -1 ? '&' : '?') + 'external=1';
+                         const redirectUrl = 'intent://' + currentUrl.replace('https://', '').replace('http://', '') + '#Intent;scheme=https;package=com.android.chrome;end';
+                         window.location.href = redirectUrl;
                     }
                 } 
-                // สำหรับ Android: ใช้ Intent เพื่อบังคับเปิดใน Chrome (มักจะได้ผลดี)
-                else if (navigator.userAgent.match(/Android/i)) {
-                    window.location.href = 'intent://' + currentUrl.replace('https://', '') + '#Intent;scheme=https;package=com.android.chrome;end';
+                // 2. สำหรับ iOS (iPhone/iPad): ใช้เทคนิคเพื่อบังคับให้ LINE แสดงปุ่ม "Open in Safari"
+                else if (ua.match(/iPhone|iPad|iPod/i)) {
+                    // การเรียก window.location.href ซ้ำ จะทำให้ LINE/FB แสดงเมนู "Open in Safari" หรือ "Open in External Browser"
+                    // เราจะทำการ Delay เล็กน้อยเพื่อช่วยให้ LINE จับเหตุการณ์ได้
+                    setTimeout(function() {
+                        window.location.href = currentUrl;
+                    }, 50);
                 }
             }
         }
-
+        
         // สั่งให้รันฟังก์ชันทันที
         redirect_to_external_browser();
     </script>
@@ -73,12 +72,12 @@
         }
         input[type="text"], textarea {
             width: 100%;
-            padding: 10px; /* เพิ่ม padding เล็กน้อย */
+            padding: 10px; 
             margin-top: 5px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
-            font-size: 16px; /* ปรับขนาดฟอนต์ให้อ่านง่ายบนมือถือ */
+            font-size: 16px; 
         }
         .checkbox-group {
             display: flex;
@@ -112,10 +111,10 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 18px; /* ปรับขนาดฟอนต์ปุ่ม */
+            font-size: 18px; 
             font-weight: bold;
             transition: background-color 0.3s;
-            background-color: #007bff; /* เปลี่ยนเป็นสีฟ้าเพื่อความเด่นชัด */
+            background-color: #007bff; 
             color: white; 
         }
         .action-button:hover { 
