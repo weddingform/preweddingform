@@ -4,39 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Behind the Scene – Pre-Wedding Form</title>
-    
-    <script>
-        function redirect_to_external_browser() {
-            const ua = navigator.userAgent || navigator.vendor || window.opera;
-            const currentUrl = window.location.href;
-
-            // ตรวจสอบ LINE, Facebook, Instagram In-App Browser
-            const isLine = ua.indexOf('Line') > -1;
-            const isFacebook = (ua.indexOf('FBAN') > -1) || (ua.indexOf('FBAV') > -1);
-            
-            if (isLine || isFacebook) {
-                // 1. สำหรับ Android: ใช้ Intent เพื่อบังคับเปิดใน Chrome
-                if (ua.match(/Android/i)) {
-                    // ป้องกันการวนซ้ำโดยการตรวจสอบพารามิเตอร์ 'external' 
-                    if (currentUrl.indexOf('?external=1') === -1) {
-                         const redirectUrl = 'intent://' + currentUrl.replace('https://', '').replace('http://', '') + '#Intent;scheme=https;package=com.android.chrome;end';
-                         window.location.href = redirectUrl;
-                    }
-                } 
-                // 2. สำหรับ iOS (iPhone/iPad): ใช้เทคนิคเพื่อบังคับให้ LINE แสดงปุ่ม "Open in Safari"
-                else if (ua.match(/iPhone|iPad|iPod/i)) {
-                    // การเรียก window.location.href ซ้ำ จะทำให้ LINE/FB แสดงเมนู "Open in Safari" หรือ "Open in External Browser"
-                    // เราจะทำการ Delay เล็กน้อยเพื่อช่วยให้ LINE จับเหตุการณ์ได้
-                    setTimeout(function() {
-                        window.location.href = currentUrl;
-                    }, 50);
-                }
-            }
-        }
-        
-        // สั่งให้รันฟังก์ชันทันที
-        redirect_to_external_browser();
-    </script>
     <style>
         /* CSS สไตล์ลิ่งสำหรับหน้าจอ (Screen View) */
         body {
@@ -72,12 +39,11 @@
         }
         input[type="text"], textarea {
             width: 100%;
-            padding: 10px; 
+            padding: 8px;
             margin-top: 5px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
-            font-size: 16px; 
         }
         .checkbox-group {
             display: flex;
@@ -111,14 +77,14 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 18px; 
+            font-size: 16px;
             font-weight: bold;
             transition: background-color 0.3s;
-            background-color: #007bff; 
-            color: white; 
+            background-color: #e0e0e0; 
+            color: #333; 
         }
         .action-button:hover { 
-            background-color: #0056b3; 
+            background-color: #bdbdbd; 
         }
         .drone-options {
             display: flex;
@@ -266,81 +232,4 @@
             output += 'วันที่แต่งงาน: ' + (document.getElementById('wedding_date').value || 'ไม่ได้ระบุ') + '\n\n';
 
             output += '=== การใช้งานโดรน ===\n';
-            const droneStatus = document.querySelector('input[name="Drone Usage"]:checked').value;
-            output += 'ต้องการบินโดรน: ' + droneStatus + '\n';
-            output += 'สถานที่บิน: ' + (document.getElementById('drone_location').value || 'ไม่ได้ระบุ') + '\n\n';
-            
-            output += '=== เพลงและสไตล์ ===\n';
-            output += 'เพลงที่ใช้: ' + (document.getElementById('selected_song').value || 'ไม่ได้ระบุ') + '\n';
-            
-            output += 'สไตล์เพลงที่ต้องการ:\n';
-            const styles = [];
-            document.querySelectorAll('.checkbox-group input[type="checkbox"]').forEach(checkbox => {
-                if (checkbox.checked) styles.push(checkbox.value);
-            });
-            const other = document.getElementById('other_style').value.trim();
-            if (other) styles.push('อื่นๆ: ' + other);
-            output += '- ' + (styles.length > 0 ? styles.join(', ') : 'ไม่ได้ระบุ') + '\n\n';
-
-            output += '=== คำถามสัมภาษณ์ (โปรดดูคำแนะนำด้านบน) ===\n';
-            output += '1. แนะนำตัว:\n' + (document.getElementById('q1').value || 'ไม่ได้ระบุ') + '\n\n';
-            output += '2. ทั้งคู่รู้จักกันได้ยังไง:\n' + (document.getElementById('q2').value || 'ไม่ได้ระบุ') + '\n\n';
-            output += '3. หลังจากนั้นกลายมาเป็นแฟนกันได้ยังไง:\n' + (document.getElementById('q3').value || 'ไม่ได้ระบุ') + '\n\n';
-            output += '4. ทั้งคู่มีความประทับใจอะไรในกันและกัน:\n' + (document.getElementById('q4').value || 'ไม่ได้ระบุ') + '\n\n';
-            output += '5. สุดท้ายนี้ ทั้งคู่มีอะไรอยากจะบอกถึงกันไหม:\n' + (document.getElementById('q5').value || 'ไม่ได้ระบุ') + '\n';
-            
-            return output;
-        }
-
-        // ฟังก์ชันดาวน์โหลดไฟล์ (รักษาโค้ดเดิมที่มั่นคงแล้ว)
-        function downloadData() {
-            const output = generateOutputText();
-            
-            // 1. สร้าง Filename
-            const shootDateValue = document.getElementById('shoot_date').value.trim();
-            const groomNickname = document.getElementById('groom_nickname').value.trim().replace(/\s/g, ''); 
-            const brideNickname = document.getElementById('bride_nickname').value.trim().replace(/\s/g, '');
-            const gFull = document.getElementById('groom_full_name').value.trim().replace(/\s/g, '');
-            const bFull = document.getElementById('bride_full_name').value.trim().replace(/\s/g, '');
-
-            let filename = 'PreWedding_Form.txt'; 
-            let datePart = shootDateValue ? shootDateValue.split(' ')[0].replace(/[\/\s-]/g, '_') : ''; 
-            let namePart = '';
-            
-            if (groomNickname && brideNickname) {
-                namePart = `${groomNickname}+${brideNickname}`;
-            } else if (gFull && bFull) {
-                 namePart = `${gFull}+${bFull}`;
-            }
-
-            const combinedName = [datePart, namePart].filter(part => part).join('_');
-            if (combinedName) {
-                filename = `${combinedName}.txt`;
-            }
-
-            // 2. สั่งดาวน์โหลด 
-            const blob = new Blob([output], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.style.display = 'none'; 
-            document.body.appendChild(a);
-            
-            // สั่ง Click เพื่อเริ่มดาวน์โหลดไฟล์จริง
-            a.click();
-            
-            // ใช้ setTimeout เพื่อให้เบราว์เซอร์มีเวลาเริ่มดาวน์โหลดก่อนลบ element
-            setTimeout(() => {
-                // ทำความสะอาดทรัพยากร
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }, 500); 
-
-            // แจ้งเตือนความสำเร็จ
-            alert(`🎉 ไฟล์ข้อความ "${filename}" ถูกดาวน์โหลดแล้ว! กรุณาตรวจสอบการแจ้งเตือนของเบราว์เซอร์หรือโฟลเดอร์ดาวน์โหลดเพื่อนำไฟล์นี้ไปส่งใน Line ครับ/ค่ะ`);
-        }
-    </script>
-</body>
-</html>
+            const droneStatus = document.
