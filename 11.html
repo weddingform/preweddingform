@@ -17,7 +17,7 @@
         textarea { height: 100px; resize: vertical; }
         .note { font-style: italic; color: #888; margin-top: 5px; }
         
-        /* สไตล์สำหรับปุ่ม - เปลี่ยนเป็นสีเขียว LINE */
+        /* สไตล์สำหรับปุ่ม - เปลี่ยนเป็นสีน้ำเงิน (Copy) */
         .action-button-group { margin-top: 30px; }
         .action-button {
             width: 100%; 
@@ -28,14 +28,22 @@
             font-size: 18px; 
             font-weight: bold;
             transition: background-color 0.3s;
-            background-color: #00B900; /* สีเขียว LINE */
+            background-color: #007bff; /* สีน้ำเงิน (Copy) */
             color: white; 
         }
         .action-button:hover { 
-            background-color: #009900; 
+            background-color: #0056b3; 
         }
         .drone-options { display: flex; gap: 20px; margin-top: 10px; }
         .instruction-box { background-color: #f0f0f0; padding: 15px; border-left: 5px solid #666; margin-bottom: 20px; font-style: italic; }
+        
+        /* สไตล์สำหรับ Textarea ที่ซ่อนไว้ (ใช้สำหรับ Copy) */
+        #hiddenOutput {
+            position: absolute; /* ซ่อนไว้ */
+            left: -9999px; 
+            width: 1px;
+            height: 1px;
+        }
     </style>
 </head>
 <body>
@@ -99,20 +107,19 @@
             <textarea id="q5" name="Q5: Message to each other?"></textarea>
             
             <div class="action-button-group">
-                <button type="button" class="action-button" onclick="handleSendToLine()">
-                    ✅ ส่งข้อมูลทั้งหมดผ่าน LINE (เสร็จสิ้น)
+                <button type="button" class="action-button" onclick="handleCopy()">
+                    📋 คัดลอกข้อความทั้งหมด (เพื่อนำไปวางใน LINE)
                 </button>
             </div>
         </form>
     </div>
 
-    <script>
-        // 🚨 กรุณาเปลี่ยน 'YOUR_LINE_ID_HERE' เป็น LINE ID หรือเบอร์โทรศัพท์ของคุณ (ที่มี Line)
-        const YOUR_LINE_ID = 'YOUR_LINE_ID_HERE'; 
+    <textarea id="hiddenOutput" readonly></textarea>
 
-        // ฟังก์ชันสร้างข้อความสำหรับ LINE (เหมือนเดิม)
+    <script>
+        // ฟังก์ชันสร้างข้อความสำหรับคัดลอก
         function generateOutputText() {
-            let output = '--- ✅ ข้อมูล Pre-Wedding Form (ส่งผ่าน LINE) ✅ ---\n\n';
+            let output = '--- ✅ ข้อมูล Pre-Wedding Form ✅ ---\n\n';
 
             output += '=== ข้อมูลพื้นฐาน ===\n';
             output += 'วันที่ถ่ายงาน: ' + (document.getElementById('shoot_date').value || 'ไม่ได้ระบุ') + '\n';
@@ -167,47 +174,35 @@
              return true;
          }
 
-        // 🟢 ฟังก์ชันใหม่: ส่งข้อมูลกลับเข้า LINE ทันที 🟢
-        function handleSendToLine() {
+        // 🟢 ฟังก์ชันใหม่: คัดลอกข้อความทั้งหมดไปยัง Clipboard 🟢
+        function handleCopy() {
             if (!validateForm()) {
                 return; // หยุดถ้ากรอกข้อมูลไม่ครบ
             }
 
-            // 1. สร้างข้อความทั้งหมด
-            const textContent = generateOutputText();
+            // 1. นำข้อมูลไปใส่ใน Textarea ที่ซ่อนไว้
+            const textOutput = generateOutputText();
+            const hiddenOutput = document.getElementById('hiddenOutput');
+            hiddenOutput.value = textOutput;
 
-            // 2. เข้ารหัสข้อความสำหรับ URL (สำคัญมากเพื่อให้ส่งภาษาไทยได้)
-            const encodedText = encodeURIComponent(textContent);
+            // 2. เลือกข้อความทั้งหมด
+            hiddenOutput.select();
+            hiddenOutput.setSelectionRange(0, 99999); // สำหรับมือถือ
 
-            // 3. สร้าง URL สำหรับเปิด LINE (ใช้ URL Scheme ที่ทำงานใน In-App Browser)
-            // line://msg/text/ คือการส่งข้อความถึงตัวเอง (Saved Message/Keep Memo) 
-            // line://msg/text/?<message> คือการส่งข้อความถึงเพื่อนคนแรกในรายชื่อ (ถ้าใส่ ID/เบอร์จะแม่นยำกว่า)
-            
-            let lineUrl = '';
-            if (YOUR_LINE_ID && YOUR_LINE_ID !== 'YOUR_LINE_ID_HERE') {
-                 // ส่งหาเพื่อน/บัญชีทางการ: line://ti/p/<Line ID หรือเบอร์โทรศัพท์>
-                 // Line Official Account (ถ้ามี): https://line.me/R/oaMessage/@YOURID/?<encoded text>
-                 
-                 // วิธีที่เสถียรที่สุดคือให้ลูกค้าส่งหาคุณเองครับ
-                 lineUrl = `line://msg/text/${encodedText}`; // ส่งข้อความหาตัวเองก่อน (แล้วค่อย Forward)
-                 
-                 // หรือใช้ line.me/R/msg/text/?message เพื่อให้ง่ายในการแชร์หาเพื่อน
-                 // แต่ใน In-App Browser อาจต้องใช้ line://
-                 
-                 // ใช้ URL ที่ให้ลูกค้าสามารถคัดลอกได้
-                 alert("🎉 ระบบได้รวมข้อมูลทั้งหมดเรียบร้อยแล้ว! \n\n เมื่อกด OK จะเปิด LINE เพื่อให้คุณ 'ส่ง' ข้อมูลนี้ให้ทีมงาน");
-
-            } else {
-                 // ถ้าไม่ได้ตั้ง LINE ID ให้ส่งหาตัวเอง
-                 lineUrl = `line://msg/text/${encodedText}`;
-                 alert("🎉 ระบบได้รวมข้อมูลทั้งหมดเรียบร้อยแล้ว! \n\n เมื่อกด OK จะเปิด LINE เพื่อให้คุณ 'ส่ง' ข้อความนี้ให้ทีมงาน (จะถูกส่งไปที่ Keep Memo ของคุณก่อน)");
-
+            // 3. สั่งคัดลอก (ใช้ document.execCommand('copy') ที่เสถียรกว่าใน In-App Browser เก่า ๆ)
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    alert('✅ ข้อมูลทั้งหมดถูกคัดลอกแล้ว!\n\nกรุณาไปที่แชท LINE แล้วกด "วาง (Paste)" เพื่อส่งข้อมูลครับ/ค่ะ');
+                } else {
+                    // หาก execCommand ล้มเหลว (หายากในปัจจุบัน)
+                    alert('⚠️ ไม่สามารถคัดลอกได้อัตโนมัติ กรุณาเลือกข้อความทั้งหมดแล้วคัดลอกด้วยตนเอง');
+                }
+            } catch (err) {
+                // หากคัดลอกไม่ได้เลย (เกิดขึ้นได้ในสภาพแวดล้อมที่จำกัดมาก)
+                alert('⚠️ ไม่สามารถคัดลอกได้อัตโนมัติ กรุณาเลือกข้อความทั้งหมดแล้วคัดลอกด้วยตนเอง');
             }
-
-            // 4. สั่งเปิด LINE
-            window.location.href = lineUrl;
         }
-
     </script>
 </body>
 </html>
