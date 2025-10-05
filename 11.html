@@ -178,11 +178,135 @@
             <textarea id="q5" name="Q5: Message to each other?"></textarea>
             
             <div class="action-button-group">
-                <button type="button" class="action-button" disabled>
-                    (ฟังก์ชันดาวน์โหลดถูกปิดชั่วคราวเพื่อแก้ไขข้อผิดพลาด)
+                <button type="button" id="downloadBtn" class="action-button" onclick="handleDownload()">
+                    ⬇️ ดาวน์โหลดไฟล์ข้อความ (เพื่อนำไฟล์ไปส่งใน Line)
                 </button>
             </div>
         </form>
     </div>
+
+    <script>
+        // ฟังก์ชันตรวจสอบความถูกต้องของฟอร์ม (ชื่อและวันที่)
+        function validateForm() {
+            // 1. ตรวจสอบ วันที่ถ่ายงาน (Required)
+            const shootDate = document.getElementById('shoot_date').value.trim();
+            if (!shootDate) {
+                alert('⚠️ กรุณากรอก "วันที่ถ่ายงาน" เพื่อความสะดวกในการจัดการข้อมูลครับ/ค่ะ');
+                document.getElementById('shoot_date').focus();
+                return false;
+            }
+
+            // 2. ตรวจสอบ ชื่อ (อย่างน้อยต้องมีหนึ่งคู่)
+            const gNick = document.getElementById('groom_nickname').value.trim();
+            const bNick = document.getElementById('bride_nickname').value.trim();
+            const gFull = document.getElementById('groom_full_name').value.trim();
+            const bFull = document.getElementById('bride_full_name').value.trim();
+
+            const hasNicknamesPair = (gNick && bNick);
+            const hasFullNamesPair = (gFull && bFull);
+
+            if (!hasNicknamesPair && !hasFullNamesPair) {
+                alert('⚠️ กรุณากรอกชื่ออย่างน้อย "ชื่อเล่นคู่" หรือ "ชื่อจริงคู่" (เป็นภาษาอังกฤษ) เพื่อใช้ในการตั้งชื่อไฟล์ครับ/ค่ะ');
+                return false;
+            }
+            return true;
+        }
+
+        // ฟังก์ชันจัดการเมื่อกดปุ่ม "ดาวน์โหลด"
+        function handleDownload() {
+            if (validateForm()) {
+                downloadData();
+            }
+        }
+        
+        // ฟังก์ชันสร้างข้อความสำหรับดาวน์โหลด 
+        function generateOutputText() {
+            let output = '--- Behind the Scene – Pre-Wedding Form ---\n\n';
+
+            output += '=== ข้อมูลพื้นฐาน ===\n';
+            output += 'วันที่ถ่ายงาน: ' + (document.getElementById('shoot_date').value || 'ไม่ได้ระบุ') + '\n';
+            output += 'ชื่อจริงเจ้าบ่าว (EN): ' + (document.getElementById('groom_full_name').value || 'ไม่ได้ระบุ') + '\n';
+            output += 'ชื่อเล่นเจ้าบ่าว (EN): ' + (document.getElementById('groom_nickname').value || 'ไม่ได้ระบุ') + '\n';
+            output += 'ชื่อจริงเจ้าสาว (EN): ' + (document.getElementById('bride_full_name').value || 'ไม่ได้ระบุ') + '\n';
+            output += 'ชื่อเล่นเจ้าสาว (EN): ' + (document.getElementById('bride_nickname').value || 'ไม่ได้ระบุ') + '\n';
+            output += 'วันที่แต่งงาน: ' + (document.getElementById('wedding_date').value || 'ไม่ได้ระบุ') + '\n\n';
+
+            output += '=== การใช้งานโดรน ===\n';
+            const droneStatus = document.querySelector('input[name="Drone Usage"]:checked').value;
+            output += 'ต้องการบินโดรน: ' + droneStatus + '\n';
+            output += 'สถานที่บิน: ' + (document.getElementById('drone_location').value || 'ไม่ได้ระบุ') + '\n\n';
+            
+            output += '=== เพลงและสไตล์ ===\n';
+            output += 'เพลงที่ใช้: ' + (document.getElementById('selected_song').value || 'ไม่ได้ระบุ') + '\n';
+            
+            output += 'สไตล์เพลงที่ต้องการ:\n';
+            const styles = [];
+            document.querySelectorAll('.checkbox-group input[type="checkbox"]').forEach(checkbox => {
+                if (checkbox.checked) styles.push(checkbox.value);
+            });
+            const other = document.getElementById('other_style').value.trim();
+            if (other) styles.push('อื่นๆ: ' + other);
+            output += '- ' + (styles.length > 0 ? styles.join(', ') : 'ไม่ได้ระบุ') + '\n\n';
+
+            output += '=== คำถามสัมภาษณ์ (โปรดดูคำแนะนำด้านบน) ===\n';
+            output += '1. แนะนำตัว:\n' + (document.getElementById('q1').value || 'ไม่ได้ระบุ') + '\n\n';
+            output += '2. ทั้งคู่รู้จักกันได้ยังไง:\n' + (document.getElementById('q2').value || 'ไม่ได้ระบุ') + '\n\n';
+            output += '3. หลังจากนั้นกลายมาเป็นแฟนกันได้ยังไง:\n' + (document.getElementById('q3').value || 'ไม่ได้ระบุ') + '\n\n';
+            output += '4. ทั้งคู่มีความประทับใจอะไรในกันและกัน:\n' + (document.getElementById('q4').value || 'ไม่ได้ระบุ') + '\n\n';
+            output += '5. สุดท้ายนี้ ทั้งคู่มีอะไรอยากจะบอกถึงกันไหม:\n' + (document.getElementById('q5').value || 'ไม่ได้ระบุ') + '\n';
+            
+            return output;
+        }
+
+        // ฟังก์ชันดาวน์โหลดไฟล์ (แก้ไข V8: ตัด Fallback และเพิ่มความเสถียรในการสั่งดาวน์โหลดไฟล์ .txt)
+        function downloadData() {
+            const output = generateOutputText();
+            
+            // 1. สร้าง Filename (โค้ดเดิมที่ถูกต้อง)
+            const shootDateValue = document.getElementById('shoot_date').value.trim();
+            const groomNickname = document.getElementById('groom_nickname').value.trim().replace(/\s/g, ''); 
+            const brideNickname = document.getElementById('bride_nickname').value.trim().replace(/\s/g, '');
+            const gFull = document.getElementById('groom_full_name').value.trim().replace(/\s/g, '');
+            const bFull = document.getElementById('bride_full_name').value.trim().replace(/\s/g, '');
+
+            let filename = 'PreWedding_Form.txt'; 
+            let datePart = shootDateValue ? shootDateValue.split(' ')[0].replace(/[\/\s-]/g, '_') : ''; 
+            let namePart = '';
+            
+            if (groomNickname && brideNickname) {
+                namePart = `${groomNickname}+${brideNickname}`;
+            } else if (gFull && bFull) {
+                 namePart = `${gFull}+${bFull}`;
+            }
+
+            const combinedName = [datePart, namePart].filter(part => part).join('_');
+            if (combinedName) {
+                filename = `${combinedName}.txt`;
+            }
+
+            // 2. สั่งดาวน์โหลด (ใช้รูปแบบที่เรียบง่ายที่สุด)
+            const blob = new Blob([output], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.style.display = 'none'; 
+            document.body.appendChild(a);
+            
+            // สั่ง Click เพื่อเริ่มดาวน์โหลดไฟล์จริง
+            a.click();
+            
+            // **สำคัญ:** ใช้ setTimeout เพื่อให้เบราว์เซอร์มีเวลาเริ่มดาวน์โหลดก่อนลบ element
+            setTimeout(() => {
+                // ทำความสะอาดทรัพยากร
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 500); 
+
+            // แจ้งเตือนความสำเร็จทันที
+            alert(`🎉 ไฟล์ข้อความ "${filename}" ถูกดาวน์โหลดแล้ว! กรุณาตรวจสอบการแจ้งเตือนของเบราว์เซอร์หรือโฟลเดอร์ดาวน์โหลดเพื่อนำไฟล์นี้ไปส่งใน Line ครับ/ค่ะ`);
+        }
+    </script>
 </body>
 </html>
