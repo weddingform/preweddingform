@@ -5,99 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Behind the Scene – Pre-Wedding Form</title>
     <style>
-        /* CSS สไตล์ลิ่งสำหรับหน้าจอ (Screen View) */
-        body {
-            font-family: 'Arial', sans-serif; 
-            background-color: #f9f9f9;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-            line-height: 1.5;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #4a4a4a;
-        }
-        h2 {
-            color: #666;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 5px;
-            margin-top: 20px;
-        }
-        label {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
-        }
-        input[type="text"], textarea {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-            flex-wrap: wrap; 
-        }
-        .checkbox-group label {
-            font-weight: normal;
-            margin-left: 5px;
-            margin-right: 15px;
-            display: inline;
-        }
-        textarea {
-            height: 100px; 
-            resize: vertical;
-        }
-        .note {
-            font-style: italic;
-            color: #888;
-            margin-top: 5px;
-        }
+        /* CSS และโครงสร้างฟอร์ม (คงเดิม) */
+        body { font-family: 'Arial', sans-serif; background-color: #f9f9f9; color: #333; margin: 0; padding: 20px; line-height: 1.5; }
+        .container { max-width: 800px; margin: 0 auto; background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        h1 { text-align: center; color: #4a4a4a; }
+        h2 { color: #666; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-top: 20px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input[type="text"], textarea { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .checkbox-group { display: flex; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+        .checkbox-group label { font-weight: normal; margin-left: 5px; margin-right: 15px; display: inline; }
+        textarea { height: 100px; resize: vertical; }
+        .note { font-style: italic; color: #888; margin-top: 5px; }
         
-        /* สไตล์สำหรับปุ่ม - สีเทาเรียบหรู */
-        .action-button-group {
-            margin-top: 30px;
-        }
+        /* สไตล์สำหรับปุ่ม - เปลี่ยนเป็นสีเขียว LINE */
+        .action-button-group { margin-top: 30px; }
         .action-button {
             width: 100%; 
             padding: 15px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px; 
             font-weight: bold;
             transition: background-color 0.3s;
-            background-color: #e0e0e0; 
-            color: #333; 
+            background-color: #00B900; /* สีเขียว LINE */
+            color: white; 
         }
         .action-button:hover { 
-            background-color: #bdbdbd; 
+            background-color: #009900; 
         }
-        .drone-options {
-            display: flex;
-            gap: 20px;
-            margin-top: 10px;
-        }
-        .instruction-box {
-            background-color: #f0f0f0; 
-            padding: 15px; 
-            border-left: 5px solid #666; 
-            margin-bottom: 20px;
-            font-style: italic;
-        }
+        .drone-options { display: flex; gap: 20px; margin-top: 10px; }
+        .instruction-box { background-color: #f0f0f0; padding: 15px; border-left: 5px solid #666; margin-bottom: 20px; font-style: italic; }
     </style>
 </head>
 <body>
@@ -107,27 +45,19 @@
 
         <form id="mainForm">
             <h2>ข้อมูลพื้นฐาน (ต้องกรอก)</h2>
-            
             <label for="shoot_date">วันที่ถ่ายงาน (Shoot Date): <span style="color:red">*</span></label>
             <input type="text" id="shoot_date" name="Shoot Date" placeholder="เช่น 01/05/2568">
-
             <p style="font-weight: bold; margin-top: 15px;">ชื่อ (ต้องกรอกอย่างน้อย ชื่อจริงคู่ หรือ ชื่อเล่นคู่): <span style="color:red">*</span></p>
-
             <label for="groom_full_name">ชื่อจริงเจ้าบ่าว (Groom’s Full Name / Eng):</label>
             <input type="text" id="groom_full_name" name="Groom's Full Name (EN)" placeholder="เช่น Tee Tiptop">
-
             <label for="groom_nickname">ชื่อเล่นเจ้าบ่าว (Groom’s Nickname / Eng):</label>
             <input type="text" id="groom_nickname" name="Groom's Nickname (EN)" placeholder="เช่น Tee">
-            
             <label for="bride_full_name">ชื่อจริงเจ้าสาว (Bride’s Full Name / Eng):</label>
             <input type="text" id="bride_full_name" name="Bride's Full Name (EN)" placeholder="เช่น Mim Mintra">
-
             <label for="bride_nickname">ชื่อเล่นเจ้าสาว (Bride’s Nickname / Eng):</label>
             <input type="text" id="bride_nickname" name="Bride's Nickname (EN)" placeholder="เช่น Mim">
-
             <label for="wedding_date">วันที่แต่งงาน (Wedding Date):</label>
             <input type="text" id="wedding_date" name="Wedding Date" placeholder="เช่น 25/12/2025">
-
             <h2>การใช้งานโดรน (สำคัญมาก!)</h2>
             <label>ต้องการบินโดรนในงานถ่ายหรือไม่?</label>
             <div class="drone-options">
@@ -136,15 +66,12 @@
                 <input type="radio" id="drone_no" name="Drone Usage" value="No - ไม่ต้องการบิน" checked>
                 <label for="drone_no">ไม่ต้องการบิน</label>
             </div>
-            
             <label for="drone_location">สถานที่ที่ต้องการบินโดรน:</label>
             <p class="note">**สำคัญ:** กรุณาระบุสถานที่ให้ชัดเจน (ชื่อสถานที่, พิกัด) เพื่อตรวจสอบข้อจำกัดด้านกฎหมายและใบอนุญาต</p>
             <textarea id="drone_location" name="Drone Location Detail"></textarea>
-
             <h2>เพลงและสไตล์</h2>
             <label for="selected_song">เพลงที่ใช้ / Selected Song:</label>
             <input type="text" id="selected_song" name="Selected Song">
-
             <label>สไตล์เพลงที่ต้องการ / Song Style:</label>
             <div class="checkbox-group">
                 <input type="checkbox" id="fun" name="Song Style" value="สนุก (Fun)">
@@ -156,79 +83,41 @@
             </div>
             <label for="other_style">อื่นๆ (Other):</label>
             <input type="text" id="other_style" name="Other Style">
-
             <h2>คำถามสัมภาษณ์ (5 ข้อ)</h2>
             <div class="instruction-box">
                 **คำแนะนำ:** ให้เจ้าบ่าวเจ้าสาวเขียนรายละเอียดเรื่องราวทั้งหมดลงไปได้เลยตามความเข้าใจของตัวเอง ทางเราจะช่วยปรับแต่งและเกลาข้อความให้สละสลวยเหมาะสมกับการสัมภาษณ์ และจะส่งกลับไปให้ท่านฝึกซ้อมก่อนวันถ่ายจริง เพื่อให้การสัมภาษณ์เป็นไปอย่างราบรื่นครับ/ค่ะ
             </div>
-            
             <label for="q1">1. แนะนำตัว:</label>
             <textarea id="q1" name="Q1: Introduction" placeholder="เช่น สวัสดีครับ/ค่ะ [ชื่อเล่น] นะครับ/คะ [ชื่อจริง]"></textarea>
-
             <label for="q2">2. ทั้งคู่รู้จักกันได้ยังไง:</label>
             <textarea id="q2" name="Q2: How did you meet?"></textarea>
-            
             <label for="q3">3. หลังจากนั้นกลายมาเป็นแฟนกันได้ยังไง:</label>
             <textarea id="q3" name="Q3: How did you become a couple?"></textarea>
-
             <label for="q4">4. ทั้งคู่มีความประทับใจอะไรในกันและกัน:</label>
             <textarea id="q4" name="Q4: Admire about each other?"></textarea>
-
             <label for="q5">5. สุดท้ายนี้ ทั้งคู่มีอะไรอยากจะบอกถึงกันไหม:</label>
             <textarea id="q5" name="Q5: Message to each other?"></textarea>
             
             <div class="action-button-group">
-                <button type="button" id="downloadBtn" class="action-button" onclick="handleDownload()">
-                    ⬇️ ดาวน์โหลดไฟล์ข้อความ (เพื่อนำไฟล์ไปส่งใน Line)
+                <button type="button" class="action-button" onclick="handleSendToLine()">
+                    ✅ ส่งข้อมูลทั้งหมดผ่าน LINE (เสร็จสิ้น)
                 </button>
             </div>
         </form>
     </div>
 
     <script>
-        // ฟังก์ชันตรวจสอบความถูกต้องของฟอร์ม (ชื่อและวันที่)
-        function validateForm() {
-            // 1. ตรวจสอบ วันที่ถ่ายงาน (Required)
-            const shootDate = document.getElementById('shoot_date').value.trim();
-            if (!shootDate) {
-                alert('⚠️ กรุณากรอก "วันที่ถ่ายงาน" เพื่อความสะดวกในการจัดการข้อมูลครับ/ค่ะ');
-                document.getElementById('shoot_date').focus();
-                return false;
-            }
+        // 🚨 กรุณาเปลี่ยน 'YOUR_LINE_ID_HERE' เป็น LINE ID หรือเบอร์โทรศัพท์ของคุณ (ที่มี Line)
+        const YOUR_LINE_ID = 'YOUR_LINE_ID_HERE'; 
 
-            // 2. ตรวจสอบ ชื่อ (อย่างน้อยต้องมีหนึ่งคู่)
-            const gNick = document.getElementById('groom_nickname').value.trim();
-            const bNick = document.getElementById('bride_nickname').value.trim();
-            const gFull = document.getElementById('groom_full_name').value.trim();
-            const bFull = document.getElementById('bride_full_name').value.trim();
-
-            const hasNicknamesPair = (gNick && bNick);
-            const hasFullNamesPair = (gFull && bFull);
-
-            if (!hasNicknamesPair && !hasFullNamesPair) {
-                alert('⚠️ กรุณากรอกชื่ออย่างน้อย "ชื่อเล่นคู่" หรือ "ชื่อจริงคู่" (เป็นภาษาอังกฤษ) เพื่อใช้ในการตั้งชื่อไฟล์ครับ/ค่ะ');
-                return false;
-            }
-            return true;
-        }
-
-        // ฟังก์ชันจัดการเมื่อกดปุ่ม "ดาวน์โหลด"
-        function handleDownload() {
-            if (validateForm()) {
-                downloadData();
-            }
-        }
-        
-        // ฟังก์ชันสร้างข้อความสำหรับดาวน์โหลด 
+        // ฟังก์ชันสร้างข้อความสำหรับ LINE (เหมือนเดิม)
         function generateOutputText() {
-            let output = '--- Behind the Scene – Pre-Wedding Form ---\n\n';
+            let output = '--- ✅ ข้อมูล Pre-Wedding Form (ส่งผ่าน LINE) ✅ ---\n\n';
 
             output += '=== ข้อมูลพื้นฐาน ===\n';
             output += 'วันที่ถ่ายงาน: ' + (document.getElementById('shoot_date').value || 'ไม่ได้ระบุ') + '\n';
-            output += 'ชื่อจริงเจ้าบ่าว (EN): ' + (document.getElementById('groom_full_name').value || 'ไม่ได้ระบุ') + '\n';
-            output += 'ชื่อเล่นเจ้าบ่าว (EN): ' + (document.getElementById('groom_nickname').value || 'ไม่ได้ระบุ') + '\n';
-            output += 'ชื่อจริงเจ้าสาว (EN): ' + (document.getElementById('bride_full_name').value || 'ไม่ได้ระบุ') + '\n';
-            output += 'ชื่อเล่นเจ้าสาว (EN): ' + (document.getElementById('bride_nickname').value || 'ไม่ได้ระบุ') + '\n';
+            output += 'ชื่อจริงบ่าว/สาว (EN): ' + (document.getElementById('groom_full_name').value || 'ไม่ได้ระบุ') + ' / ' + (document.getElementById('bride_full_name').value || 'ไม่ได้ระบุ') + '\n';
+            output += 'ชื่อเล่นบ่าว/สาว (EN): ' + (document.getElementById('groom_nickname').value || 'ไม่ได้ระบุ') + ' / ' + (document.getElementById('bride_nickname').value || 'ไม่ได้ระบุ') + '\n';
             output += 'วันที่แต่งงาน: ' + (document.getElementById('wedding_date').value || 'ไม่ได้ระบุ') + '\n\n';
 
             output += '=== การใช้งานโดรน ===\n';
@@ -248,7 +137,7 @@
             if (other) styles.push('อื่นๆ: ' + other);
             output += '- ' + (styles.length > 0 ? styles.join(', ') : 'ไม่ได้ระบุ') + '\n\n';
 
-            output += '=== คำถามสัมภาษณ์ (โปรดดูคำแนะนำด้านบน) ===\n';
+            output += '=== คำถามสัมภาษณ์ ===\n';
             output += '1. แนะนำตัว:\n' + (document.getElementById('q1').value || 'ไม่ได้ระบุ') + '\n\n';
             output += '2. ทั้งคู่รู้จักกันได้ยังไง:\n' + (document.getElementById('q2').value || 'ไม่ได้ระบุ') + '\n\n';
             output += '3. หลังจากนั้นกลายมาเป็นแฟนกันได้ยังไง:\n' + (document.getElementById('q3').value || 'ไม่ได้ระบุ') + '\n\n';
@@ -258,55 +147,67 @@
             return output;
         }
 
-        // ฟังก์ชันดาวน์โหลดไฟล์ (แก้ไข V8: ตัด Fallback และเพิ่มความเสถียรในการสั่งดาวน์โหลดไฟล์ .txt)
-        function downloadData() {
-            const output = generateOutputText();
-            
-            // 1. สร้าง Filename (โค้ดเดิมที่ถูกต้อง)
-            const shootDateValue = document.getElementById('shoot_date').value.trim();
-            const groomNickname = document.getElementById('groom_nickname').value.trim().replace(/\s/g, ''); 
-            const brideNickname = document.getElementById('bride_nickname').value.trim().replace(/\s/g, '');
-            const gFull = document.getElementById('groom_full_name').value.trim().replace(/\s/g, '');
-            const bFull = document.getElementById('bride_full_name').value.trim().replace(/\s/g, '');
+        // ฟังก์ชันตรวจสอบความถูกต้อง (เหมือนเดิม)
+        function validateForm() {
+             const shootDate = document.getElementById('shoot_date').value.trim();
+             const gNick = document.getElementById('groom_nickname').value.trim();
+             const bNick = document.getElementById('bride_nickname').value.trim();
+             const gFull = document.getElementById('groom_full_name').value.trim();
+             const bFull = document.getElementById('bride_full_name').value.trim();
+ 
+             if (!shootDate) {
+                 alert('⚠️ กรุณากรอก "วันที่ถ่ายงาน"');
+                 document.getElementById('shoot_date').focus();
+                 return false;
+             }
+             if (!( (gNick && bNick) || (gFull && bFull) )) {
+                 alert('⚠️ กรุณากรอกชื่ออย่างน้อย "ชื่อเล่นคู่" หรือ "ชื่อจริงคู่"');
+                 return false;
+             }
+             return true;
+         }
 
-            let filename = 'PreWedding_Form.txt'; 
-            let datePart = shootDateValue ? shootDateValue.split(' ')[0].replace(/[\/\s-]/g, '_') : ''; 
-            let namePart = '';
-            
-            if (groomNickname && brideNickname) {
-                namePart = `${groomNickname}+${brideNickname}`;
-            } else if (gFull && bFull) {
-                 namePart = `${gFull}+${bFull}`;
+        // 🟢 ฟังก์ชันใหม่: ส่งข้อมูลกลับเข้า LINE ทันที 🟢
+        function handleSendToLine() {
+            if (!validateForm()) {
+                return; // หยุดถ้ากรอกข้อมูลไม่ครบ
             }
 
-            const combinedName = [datePart, namePart].filter(part => part).join('_');
-            if (combinedName) {
-                filename = `${combinedName}.txt`;
+            // 1. สร้างข้อความทั้งหมด
+            const textContent = generateOutputText();
+
+            // 2. เข้ารหัสข้อความสำหรับ URL (สำคัญมากเพื่อให้ส่งภาษาไทยได้)
+            const encodedText = encodeURIComponent(textContent);
+
+            // 3. สร้าง URL สำหรับเปิด LINE (ใช้ URL Scheme ที่ทำงานใน In-App Browser)
+            // line://msg/text/ คือการส่งข้อความถึงตัวเอง (Saved Message/Keep Memo) 
+            // line://msg/text/?<message> คือการส่งข้อความถึงเพื่อนคนแรกในรายชื่อ (ถ้าใส่ ID/เบอร์จะแม่นยำกว่า)
+            
+            let lineUrl = '';
+            if (YOUR_LINE_ID && YOUR_LINE_ID !== 'YOUR_LINE_ID_HERE') {
+                 // ส่งหาเพื่อน/บัญชีทางการ: line://ti/p/<Line ID หรือเบอร์โทรศัพท์>
+                 // Line Official Account (ถ้ามี): https://line.me/R/oaMessage/@YOURID/?<encoded text>
+                 
+                 // วิธีที่เสถียรที่สุดคือให้ลูกค้าส่งหาคุณเองครับ
+                 lineUrl = `line://msg/text/${encodedText}`; // ส่งข้อความหาตัวเองก่อน (แล้วค่อย Forward)
+                 
+                 // หรือใช้ line.me/R/msg/text/?message เพื่อให้ง่ายในการแชร์หาเพื่อน
+                 // แต่ใน In-App Browser อาจต้องใช้ line://
+                 
+                 // ใช้ URL ที่ให้ลูกค้าสามารถคัดลอกได้
+                 alert("🎉 ระบบได้รวมข้อมูลทั้งหมดเรียบร้อยแล้ว! \n\n เมื่อกด OK จะเปิด LINE เพื่อให้คุณ 'ส่ง' ข้อมูลนี้ให้ทีมงาน");
+
+            } else {
+                 // ถ้าไม่ได้ตั้ง LINE ID ให้ส่งหาตัวเอง
+                 lineUrl = `line://msg/text/${encodedText}`;
+                 alert("🎉 ระบบได้รวมข้อมูลทั้งหมดเรียบร้อยแล้ว! \n\n เมื่อกด OK จะเปิด LINE เพื่อให้คุณ 'ส่ง' ข้อความนี้ให้ทีมงาน (จะถูกส่งไปที่ Keep Memo ของคุณก่อน)");
+
             }
 
-            // 2. สั่งดาวน์โหลด (ใช้รูปแบบที่เรียบง่ายที่สุด)
-            const blob = new Blob([output], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.style.display = 'none'; 
-            document.body.appendChild(a);
-            
-            // สั่ง Click เพื่อเริ่มดาวน์โหลดไฟล์จริง
-            a.click();
-            
-            // **สำคัญ:** ใช้ setTimeout เพื่อให้เบราว์เซอร์มีเวลาเริ่มดาวน์โหลดก่อนลบ element
-            setTimeout(() => {
-                // ทำความสะอาดทรัพยากร
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }, 500); 
-
-            // แจ้งเตือนความสำเร็จทันที
-            alert(`🎉 ไฟล์ข้อความ "${filename}" ถูกดาวน์โหลดแล้ว! กรุณาตรวจสอบการแจ้งเตือนของเบราว์เซอร์หรือโฟลเดอร์ดาวน์โหลดเพื่อนำไฟล์นี้ไปส่งใน Line ครับ/ค่ะ`);
+            // 4. สั่งเปิด LINE
+            window.location.href = lineUrl;
         }
+
     </script>
 </body>
 </html>
