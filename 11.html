@@ -4,6 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Behind the Scene – Pre-Wedding Form</title>
+    
+    <script>
+        function is_in_app() {
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
+            // ตรวจสอบ In-App Browser ของ LINE, Facebook, Instagram
+            return (
+                (ua.indexOf('Line') > -1) ||
+                (ua.indexOf('FBAN') > -1) || (ua.indexOf('FBAV') > -1) ||
+                (ua.indexOf('Instagram') > -1)
+            );
+        }
+
+        function redirect_to_external_browser() {
+            if (is_in_app()) {
+                const currentUrl = window.location.href;
+                
+                // สำหรับ iOS (iPhone/iPad): In-App Browser มักจะบล็อก window.open
+                // การเรียก location.href อีกครั้งจะทำให้ LINE แสดงปุ่ม "Open in Safari"
+                if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+                    // หากยังไม่ได้มีพารามิเตอร์ 'external' ให้เพิ่มแล้ว redirect
+                    if (currentUrl.indexOf('?external=1') === -1) {
+                        window.location.href = currentUrl + (currentUrl.indexOf('?') > -1 ? '&' : '?') + 'external=1';
+                    }
+                } 
+                // สำหรับ Android: ใช้ Intent เพื่อบังคับเปิดใน Chrome (มักจะได้ผลดี)
+                else if (navigator.userAgent.match(/Android/i)) {
+                    window.location.href = 'intent://' + currentUrl.replace('https://', '') + '#Intent;scheme=https;package=com.android.chrome;end';
+                }
+            }
+        }
+
+        // สั่งให้รันฟังก์ชันทันที
+        redirect_to_external_browser();
+    </script>
     <style>
         /* CSS สไตล์ลิ่งสำหรับหน้าจอ (Screen View) */
         body {
@@ -39,11 +73,12 @@
         }
         input[type="text"], textarea {
             width: 100%;
-            padding: 8px;
+            padding: 10px; /* เพิ่ม padding เล็กน้อย */
             margin-top: 5px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
+            font-size: 16px; /* ปรับขนาดฟอนต์ให้อ่านง่ายบนมือถือ */
         }
         .checkbox-group {
             display: flex;
@@ -77,14 +112,14 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px; /* ปรับขนาดฟอนต์ปุ่ม */
             font-weight: bold;
             transition: background-color 0.3s;
-            background-color: #e0e0e0; 
-            color: #333; 
+            background-color: #007bff; /* เปลี่ยนเป็นสีฟ้าเพื่อความเด่นชัด */
+            color: white; 
         }
         .action-button:hover { 
-            background-color: #bdbdbd; 
+            background-color: #0056b3; 
         }
         .drone-options {
             display: flex;
@@ -258,11 +293,11 @@
             return output;
         }
 
-        // ฟังก์ชันดาวน์โหลดไฟล์ (แก้ไข V8: ตัด Fallback และเพิ่มความเสถียรในการสั่งดาวน์โหลดไฟล์ .txt)
+        // ฟังก์ชันดาวน์โหลดไฟล์ (รักษาโค้ดเดิมที่มั่นคงแล้ว)
         function downloadData() {
             const output = generateOutputText();
             
-            // 1. สร้าง Filename (โค้ดเดิมที่ถูกต้อง)
+            // 1. สร้าง Filename
             const shootDateValue = document.getElementById('shoot_date').value.trim();
             const groomNickname = document.getElementById('groom_nickname').value.trim().replace(/\s/g, ''); 
             const brideNickname = document.getElementById('bride_nickname').value.trim().replace(/\s/g, '');
@@ -284,7 +319,7 @@
                 filename = `${combinedName}.txt`;
             }
 
-            // 2. สั่งดาวน์โหลด (ใช้รูปแบบที่เรียบง่ายที่สุด)
+            // 2. สั่งดาวน์โหลด 
             const blob = new Blob([output], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             
@@ -297,14 +332,14 @@
             // สั่ง Click เพื่อเริ่มดาวน์โหลดไฟล์จริง
             a.click();
             
-            // **สำคัญ:** ใช้ setTimeout เพื่อให้เบราว์เซอร์มีเวลาเริ่มดาวน์โหลดก่อนลบ element
+            // ใช้ setTimeout เพื่อให้เบราว์เซอร์มีเวลาเริ่มดาวน์โหลดก่อนลบ element
             setTimeout(() => {
                 // ทำความสะอาดทรัพยากร
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
             }, 500); 
 
-            // แจ้งเตือนความสำเร็จทันที
+            // แจ้งเตือนความสำเร็จ
             alert(`🎉 ไฟล์ข้อความ "${filename}" ถูกดาวน์โหลดแล้ว! กรุณาตรวจสอบการแจ้งเตือนของเบราว์เซอร์หรือโฟลเดอร์ดาวน์โหลดเพื่อนำไฟล์นี้ไปส่งใน Line ครับ/ค่ะ`);
         }
     </script>
