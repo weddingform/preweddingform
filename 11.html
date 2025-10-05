@@ -178,58 +178,11 @@
             <textarea id="q5" name="Q5: Message to each other?"></textarea>
             
             <div class="action-button-group">
-                <button type="button" id="downloadBtn" class="action-button" onclick="handleDownload()">
-                    ⬇️ ดาวน์โหลดไฟล์ข้อความ (เพื่อนำไฟล์ไปส่งใน Line)
+                <button type="button" class="action-button" disabled>
+                    (ฟังก์ชันดาวน์โหลดถูกปิดชั่วคราวเพื่อแก้ไขข้อผิดพลาด)
                 </button>
             </div>
         </form>
     </div>
-
-    <script>
-        // ฟังก์ชันตรวจสอบความถูกต้องของฟอร์ม (ชื่อและวันที่)
-        function validateForm() {
-            // 1. ตรวจสอบ วันที่ถ่ายงาน (Required)
-            const shootDate = document.getElementById('shoot_date').value.trim();
-            if (!shootDate) {
-                alert('⚠️ กรุณากรอก "วันที่ถ่ายงาน" เพื่อความสะดวกในการจัดการข้อมูลครับ/ค่ะ');
-                document.getElementById('shoot_date').focus();
-                return false;
-            }
-
-            // 2. ตรวจสอบ ชื่อ (อย่างน้อยต้องมีหนึ่งคู่)
-            const gNick = document.getElementById('groom_nickname').value.trim();
-            const bNick = document.getElementById('bride_nickname').value.trim();
-            const gFull = document.getElementById('groom_full_name').value.trim();
-            const bFull = document.getElementById('bride_full_name').value.trim();
-
-            const hasNicknamesPair = (gNick && bNick);
-            const hasFullNamesPair = (gFull && bFull);
-
-            if (!hasNicknamesPair && !hasFullNamesPair) {
-                alert('⚠️ กรุณากรอกชื่ออย่างน้อย "ชื่อเล่นคู่" หรือ "ชื่อจริงคู่" (เป็นภาษาอังกฤษ) เพื่อใช้ในการตั้งชื่อไฟล์ครับ/ค่ะ');
-                return false;
-            }
-            return true;
-        }
-
-        // ฟังก์ชันจัดการเมื่อกดปุ่ม "ดาวน์โหลด"
-        function handleDownload() {
-            if (validateForm()) {
-                downloadData();
-            }
-        }
-        
-        // ฟังก์ชันสร้างข้อความสำหรับดาวน์โหลด 
-        function generateOutputText() {
-            let output = '--- Behind the Scene – Pre-Wedding Form ---\n\n';
-
-            output += '=== ข้อมูลพื้นฐาน ===\n';
-            output += 'วันที่ถ่ายงาน: ' + (document.getElementById('shoot_date').value || 'ไม่ได้ระบุ') + '\n';
-            output += 'ชื่อจริงเจ้าบ่าว (EN): ' + (document.getElementById('groom_full_name').value || 'ไม่ได้ระบุ') + '\n';
-            output += 'ชื่อเล่นเจ้าบ่าว (EN): ' + (document.getElementById('groom_nickname').value || 'ไม่ได้ระบุ') + '\n';
-            output += 'ชื่อจริงเจ้าสาว (EN): ' + (document.getElementById('bride_full_name').value || 'ไม่ได้ระบุ') + '\n';
-            output += 'ชื่อเล่นเจ้าสาว (EN): ' + (document.getElementById('bride_nickname').value || 'ไม่ได้ระบุ') + '\n';
-            output += 'วันที่แต่งงาน: ' + (document.getElementById('wedding_date').value || 'ไม่ได้ระบุ') + '\n\n';
-
-            output += '=== การใช้งานโดรน ===\n';
-            const droneStatus = document.
+</body>
+</html>
