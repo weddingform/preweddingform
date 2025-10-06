@@ -39,7 +39,9 @@
         .action-button:hover { 
             background-color: #0056b3; 
         }
+        /* ใช้สำหรับจัดกลุ่ม Radio Button (Drone และ Interview) */
         .drone-options { display: flex; gap: 20px; margin-top: 10px; }
+        
         .instruction-box { background-color: #f0f0f0; padding: 15px; border-left: 5px solid #666; margin-bottom: 20px; font-style: italic; }
         
         /* สไตล์สำหรับ Textarea ที่ซ่อนไว้ (ใช้สำหรับ Copy) */
@@ -50,7 +52,7 @@
             height: 1px;
         }
 
-        /* 🟢 สถานะเริ่มต้น: ซ่อนส่วนที่ต้องถูก Toggle 🟢 */
+        /* สถานะเริ่มต้น: ซ่อนส่วนที่ต้องถูก Toggle */
         #drone_details, #interview_questions {
             display: none;
         }
@@ -85,7 +87,8 @@
             
             <h2>เพลงและสไตล์</h2>
             <label for="selected_song">เพลงที่ใช้ / Selected Song:</label>
-            <input type="text" id="selected_song" name="Selected Song">
+            <input type="text" id="selected_song" name="Selected Song" placeholder="copy link เพลงมาใส่ในนี้ได้เลย หรือจะใส่ชื่อเพลงก็ได้">
+            
             <label>สไตล์เพลงที่ต้องการ / Song Style:</label>
             <div class="checkbox-group">
                 <input type="checkbox" id="fun" name="Song Style" value="สนุก (Fun)">
@@ -117,9 +120,13 @@
             
             <hr style="margin: 20px 0; border: 0; border-top: 1px dotted #ccc;">
             
-            <div class="checkbox-group">
-                <input type="checkbox" id="interview_toggle" onclick="toggleInterviewQuestions(this.checked)">
-                <label for="interview_toggle" style="font-weight: bold; font-size: 1.1em;">ต้องการบทสัมภาษณ์ (5 คำถาม)</label>
+            <label>ต้องการให้มีสัมภาษณ์เจ้าบ่าวเจ้าสาวหรือไม่?</label>
+            <div class="drone-options">
+                <input type="radio" id="interview_yes" name="Interview Usage" value="Yes - ต้องการมีบทสัมภาษณ์" onclick="toggleInterviewQuestions(true)">
+                <label for="interview_yes">ใช่, ต้องการมี</label>
+                
+                <input type="radio" id="interview_no" name="Interview Usage" value="No - ไม่ต้องการมีบทสัมภาษณ์" checked onclick="toggleInterviewQuestions(false)">
+                <label for="interview_no">ไม่ต้องการมี</label>
             </div>
 
             <div id="interview_questions">
@@ -149,18 +156,19 @@
     <textarea id="hiddenOutput" readonly></textarea>
 
     <script>
-        // 🟢 2. & 3. ฟังก์ชันสำหรับซ่อน/แสดงส่วนของโดรนและสัมภาษณ์ 🟢
+        // 🟢 ฟังก์ชัน Toggle: ไม่มีการแก้ไข 🟢
         function toggleDroneDetails(show) {
             const droneDetails = document.getElementById('drone_details');
             droneDetails.style.display = show ? 'block' : 'none';
         }
+
         function toggleInterviewQuestions(show) {
             const interviewQs = document.getElementById('interview_questions');
             interviewQs.style.display = show ? 'block' : 'none';
         }
 
         // -------------------------------------------------------------------
-        // 🟢 1. Validation (วันที่และชื่อคู่) 🟢
+        // Validation (วันที่และชื่อคู่): ไม่มีการแก้ไข
         function validateForm() {
             const shootDate = document.getElementById('shoot_date').value.trim();
             const gNick = document.getElementById('groom_nickname').value.trim();
@@ -168,14 +176,12 @@
             const gFull = document.getElementById('groom_full_name').value.trim();
             const bFull = document.getElementById('bride_full_name').value.trim();
 
-            // ตรวจสอบวันที่ถ่ายงาน
             if (!shootDate) {
                 alert('⚠️ กรุณากรอก "วันที่ถ่ายงาน"');
                 document.getElementById('shoot_date').focus();
                 return false;
             }
             
-            // ตรวจสอบการกรอกชื่อคู่
             if (!( (gNick || gFull) && (bNick || bFull) )) {
                 alert('⚠️ กรุณากรอกชื่ออย่างน้อย "ชื่อเล่นคู่" หรือ "ชื่อจริงคู่"');
                 return false;
@@ -185,7 +191,7 @@
         }
         // -------------------------------------------------------------------
 
-        // ฟังก์ชันสร้างข้อความสำหรับคัดลอก
+        // ฟังก์ชันสร้างข้อความสำหรับคัดลอก: ไม่มีการแก้ไข
         function generateOutputText() {
             let output = '--- ✅ ข้อมูล Pre-Wedding Form ✅ ---\n\n';
 
@@ -201,7 +207,7 @@
             output += 'สไตล์เพลงที่ต้องการ:\n';
             const styles = [];
             document.querySelectorAll('.checkbox-group input[type="checkbox"]').forEach(checkbox => {
-                if (checkbox.checked && checkbox.id !== 'interview_toggle') styles.push(checkbox.value); 
+                if (checkbox.checked) styles.push(checkbox.value); 
             });
             const other = document.getElementById('other_style').value.trim();
             if (other) styles.push('อื่นๆ: ' + other);
@@ -212,6 +218,7 @@
             const droneStatus = document.querySelector('input[name="Drone Usage"]:checked').value;
             output += '=== การใช้งานโดรน ===\n';
             output += 'ต้องการบินโดรน: ' + droneStatus + '\n';
+            // ตรวจสอบสถานะการแสดงผล
             if (document.getElementById('drone_details').style.display !== 'none') { 
                  output += 'สถานที่บิน: ' + (document.getElementById('drone_location').value || 'ไม่ได้ระบุ') + '\n\n';
             } else {
@@ -219,37 +226,37 @@
             }
             
             // ดึงข้อมูลสัมภาษณ์ตามสถานะที่แสดงผล
-            if (document.getElementById('interview_toggle').checked) {
-                output += '=== คำถามสัมภาษณ์ ===\n';
+            const interviewStatus = document.querySelector('input[name="Interview Usage"]:checked').value;
+            output += '=== คำถามสัมภาษณ์ ===\n';
+            output += 'ต้องการมีสัมภาษณ์เจ้าบ่าวเจ้าสาว: ' + interviewStatus + '\n';
+            
+            // ตรวจสอบสถานะการแสดงผล
+            if (document.getElementById('interview_questions').style.display !== 'none') { 
                 output += '1. แนะนำตัว:\n' + (document.getElementById('q1').value || 'ไม่ได้ระบุ') + '\n\n';
                 output += '2. ทั้งคู่รู้จักกันได้ยังไง:\n' + (document.getElementById('q2').value || 'ไม่ได้ระบุ') + '\n\n';
                 output += '3. หลังจากนั้นกลายมาเป็นแฟนกันได้ยังไง:\n' + (document.getElementById('q3').value || 'ไม่ได้ระบุ') + '\n\n';
                 output += '4. ทั้งคู่มีความประทับใจอะไรในกันและกัน:\n' + (document.getElementById('q4').value || 'ไม่ได้ระบุ') + '\n\n';
                 output += '5. สุดท้ายนี้ ทั้งคู่มีอะไรอยากจะบอกถึงกันไหม:\n' + (document.getElementById('q5').value || 'ไม่ได้ระบุ') + '\n';
             } else {
-                output += '=== คำถามสัมภาษณ์ ===\n';
                 output += 'ไม่ได้เลือกทำบทสัมภาษณ์\n';
             }
             
             return output;
         }
 
-        // ฟังก์ชันคัดลอกข้อความทั้งหมดไปยัง Clipboard 
+        // ฟังก์ชันคัดลอกข้อความทั้งหมดไปยัง Clipboard: ไม่มีการแก้ไข
         function handleCopy() {
             if (!validateForm()) {
                 return; 
             }
 
-            // 1. นำข้อมูลไปใส่ใน Textarea ที่ซ่อนไว้
             const textOutput = generateOutputText();
             const hiddenOutput = document.getElementById('hiddenOutput');
             hiddenOutput.value = textOutput;
 
-            // 2. เลือกข้อความทั้งหมด
             hiddenOutput.select();
             hiddenOutput.setSelectionRange(0, 99999); 
 
-            // 3. สั่งคัดลอก
             try {
                 const successful = document.execCommand('copy');
                 if (successful) {
@@ -262,7 +269,7 @@
             }
         }
 
-        // 🟢 การซ่อนเริ่มต้นเมื่อโหลดหน้าเว็บ (เพื่อความชัวร์ 100%) 🟢
+        // การซ่อนเริ่มต้นเมื่อโหลดหน้าเว็บ: ไม่มีการแก้ไข
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('drone_details').style.display = 'none';
             document.getElementById('interview_questions').style.display = 'none';
