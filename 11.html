@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Behind the Scene – Pre-Wedding Form</title>
+    <title>Behind the Scene – Pre-Wedding Form (Final Revised)</title>
     <style>
         /* CSS และโครงสร้างฟอร์ม (คงเดิม) */
         body { font-family: 'Arial', sans-serif; background-color: #f9f9f9; color: #333; margin: 0; padding: 20px; line-height: 1.5; }
@@ -15,9 +15,16 @@
         .checkbox-group { display: flex; align-items: center; margin-top: 10px; flex-wrap: wrap; }
         .checkbox-group label { font-weight: normal; margin-left: 5px; margin-right: 15px; display: inline; }
         textarea { height: 100px; resize: vertical; }
-        .note { font-style: italic; color: #888; margin-top: 5px; }
         
-        /* สไตล์สำหรับปุ่ม - เปลี่ยนเป็นสีน้ำเงิน (Copy) */
+        /* สไตล์สำหรับคำแนะนำ (Note) ให้เป็นตัวตรงและสีเทาจางลง */
+        .note { 
+            font-style: normal;
+            color: #888;
+            font-size: 0.9em;
+            margin-top: 5px; 
+        }
+        
+        /* สไตล์สำหรับปุ่ม */
         .action-button-group { margin-top: 30px; }
         .action-button {
             width: 100%; 
@@ -28,21 +35,26 @@
             font-size: 18px; 
             font-weight: bold;
             transition: background-color 0.3s;
-            background-color: #007bff; /* สีน้ำเงิน (Copy) */
+            background-color: #007bff;
             color: white; 
         }
         .action-button:hover { 
             background-color: #0056b3; 
         }
-        .drone-options { display: flex; gap: 20px; margin-top: 10px; }
+        .option-group { display: flex; gap: 20px; margin-top: 10px; }
         .instruction-box { background-color: #f0f0f0; padding: 15px; border-left: 5px solid #666; margin-bottom: 20px; font-style: italic; }
         
-        /* สไตล์สำหรับ Textarea ที่ซ่อนไว้ (ใช้สำหรับ Copy) */
+        /* สไตล์สำหรับ Textarea ที่ซ่อนไว้ */
         #hiddenOutput {
-            position: absolute; /* ซ่อนไว้ */
+            position: absolute; 
             left: -9999px; 
             width: 1px;
             height: 1px;
+        }
+        
+        /* สไตล์สำหรับซ่อนส่วนแบบฟอร์ม */
+        .hidden-field { 
+            display: none; 
         }
     </style>
 </head>
@@ -66,20 +78,30 @@
             <input type="text" id="bride_nickname" name="Bride's Nickname (EN)" placeholder="เช่น Mim">
             <label for="wedding_date">วันที่แต่งงาน (Wedding Date):</label>
             <input type="text" id="wedding_date" name="Wedding Date" placeholder="เช่น 25/12/2025">
+            
+            <hr>
+            
             <h2>การใช้งานโดรน (สำคัญมาก!)</h2>
             <label>ต้องการบินโดรนในงานถ่ายหรือไม่?</label>
-            <div class="drone-options">
-                <input type="radio" id="drone_yes" name="Drone Usage" value="Yes - ต้องการบิน">
+            <div class="option-group">
+                <input type="radio" id="drone_yes" name="Drone Usage" value="Yes - ต้องการบิน" onchange="toggleDroneLocation()">
                 <label for="drone_yes">ใช่, ต้องการบิน</label>
-                <input type="radio" id="drone_no" name="Drone Usage" value="No - ไม่ต้องการบิน" checked>
+                <input type="radio" id="drone_no" name="Drone Usage" value="No - ไม่ต้องการบิน" checked onchange="toggleDroneLocation()">
                 <label for="drone_no">ไม่ต้องการบิน</label>
             </div>
-            <label for="drone_location">สถานที่ที่ต้องการบินโดรน:</label>
-            <p class="note">**สำคัญ:** กรุณาระบุสถานที่ให้ชัดเจน (ชื่อสถานที่, พิกัด) เพื่อตรวจสอบข้อจำกัดด้านกฎหมายและใบอนุญาต</p>
-            <textarea id="drone_location" name="Drone Location Detail"></textarea>
+            <div id="drone_details" class="hidden-field">
+                <label for="drone_location">สถานที่ที่ต้องการบินโดรน:</label>
+                <p class="note">**สำคัญ:** กรุณาระบุสถานที่ให้ชัดเจน (ชื่อสถานที่, พิกัด) เพื่อตรวจสอบข้อจำกัดด้านกฎหมายและใบอนุญาต</p>
+                <textarea id="drone_location" name="Drone Location Detail"></textarea>
+            </div>
+
+            <hr>
+
             <h2>เพลงและสไตล์</h2>
             <label for="selected_song">เพลงที่ใช้ / Selected Song:</label>
-            <input type="text" id="selected_song" name="Selected Song">
+            <input type="text" id="selected_song" name="Selected Song" placeholder="ชื่อเพลงและศิลปิน หรือ ลิงก์เพลง">
+            <p class="note">ตัวอย่าง: เพลง XYZ - ศิลปิน ABC หรือคัดลอก **URL/Link เพลง** จาก YouTube/Spotify มาใส่ได้เลย</p>
+            
             <label>สไตล์เพลงที่ต้องการ / Song Style:</label>
             <div class="checkbox-group">
                 <input type="checkbox" id="fun" name="Song Style" value="สนุก (Fun)">
@@ -91,20 +113,34 @@
             </div>
             <label for="other_style">อื่นๆ (Other):</label>
             <input type="text" id="other_style" name="Other Style">
-            <h2>คำถามสัมภาษณ์ (5 ข้อ)</h2>
-            <div class="instruction-box">
-                **คำแนะนำ:** ให้เจ้าบ่าวเจ้าสาวเขียนรายละเอียดเรื่องราวทั้งหมดลงไปได้เลยตามความเข้าใจของตัวเอง ทางเราจะช่วยปรับแต่งและเกลาข้อความให้สละสลวยเหมาะสมกับการสัมภาษณ์ และจะส่งกลับไปให้ท่านฝึกซ้อมก่อนวันถ่ายจริง เพื่อให้การสัมภาษณ์เป็นไปอย่างราบรื่นครับ/ค่ะ
+
+            <hr>
+            
+            <h2>สัมภาษณ์</h2>
+            <label>มีสัมภาษณ์เจ้าบ่าวเจ้าสาวในวิดีโอ Behind the Scene หรือไม่?</label>
+            <div class="option-group">
+                <input type="radio" id="interview_yes" name="Interview Option" value="Yes - มีสัมภาษณ์" onchange="toggleInterviewFields()">
+                <label for="interview_yes">มี</label>
+                <input type="radio" id="interview_no" name="Interview Option" value="No - ไม่มีสัมภาษณ์" checked onchange="toggleInterviewFields()">
+                <label for="interview_no">ไม่มี</label>
             </div>
-            <label for="q1">1. แนะนำตัว:</label>
-            <textarea id="q1" name="Q1: Introduction" placeholder="เช่น สวัสดีครับ/ค่ะ [ชื่อเล่น] นะครับ/คะ [ชื่อจริง]"></textarea>
-            <label for="q2">2. ทั้งคู่รู้จักกันได้ยังไง:</label>
-            <textarea id="q2" name="Q2: How did you meet?"></textarea>
-            <label for="q3">3. หลังจากนั้นกลายมาเป็นแฟนกันได้ยังไง:</label>
-            <textarea id="q3" name="Q3: How did you become a couple?"></textarea>
-            <label for="q4">4. ทั้งคู่มีความประทับใจอะไรในกันและกัน:</label>
-            <textarea id="q4" name="Q4: Admire about each other?"></textarea>
-            <label for="q5">5. สุดท้ายนี้ ทั้งคู่มีอะไรอยากจะบอกถึงกันไหม:</label>
-            <textarea id="q5" name="Q5: Message to each other?"></textarea>
+
+            <div id="interview_questions" class="hidden-field">
+                <h3>คำถามสัมภาษณ์ (5 ข้อ)</h3>
+                <div class="instruction-box">
+                    **คำแนะนำ:** ให้เจ้าบ่าวเจ้าสาวเขียนรายละเอียดเรื่องราวทั้งหมดลงไปได้เลยตามความเข้าใจของตัวเอง ทางเราจะช่วยปรับแต่งและเกลาข้อความให้สละสลวยเหมาะสมกับการสัมภาษณ์ และจะส่งกลับไปให้ท่านฝึกซ้อมก่อนวันถ่ายจริง เพื่อให้การสัมภาษณ์เป็นไปอย่างราบรื่นครับ/ค่ะ
+                </div>
+                <label for="q1">1. แนะนำตัว:</label>
+                <textarea id="q1" name="Q1: Introduction" placeholder="เช่น สวัสดีครับ/ค่ะ [ชื่อเล่น] นะครับ/คะ [ชื่อจริง]"></textarea>
+                <label for="q2">2. ทั้งคู่รู้จักกันได้ยังไง:</label>
+                <textarea id="q2" name="Q2: How did you meet?"></textarea>
+                <label for="q3">3. หลังจากนั้นกลายมาเป็นแฟนกันได้ยังไง:</label>
+                <textarea id="q3" name="Q3: How did you become a couple?"></textarea>
+                <label for="q4">4. ทั้งคู่มีความประทับใจอะไรในกันและกัน:</label>
+                <textarea id="q4" name="Q4: Admire about each other?"></textarea>
+                <label for="q5">5. สุดท้ายนี้ ทั้งคู่มีอะไรอยากจะบอกถึงกันไหม:</label>
+                <textarea id="q5" name="Q5: Message to each other?"></textarea>
+            </div>
             
             <div class="action-button-group">
                 <button type="button" class="action-button" onclick="handleCopy()">
@@ -117,7 +153,36 @@
     <textarea id="hiddenOutput" readonly></textarea>
 
     <script>
-        // ฟังก์ชันสร้างข้อความสำหรับคัดลอก
+        // ✅ แก้ไข: ฟังก์ชันสำหรับ Toggle ส่วนโดรน
+        function toggleDroneLocation() {
+            const droneDetails = document.getElementById('drone_details');
+            const droneYes = document.getElementById('drone_yes');
+            if (droneYes.checked) {
+                droneDetails.classList.remove('hidden-field'); // แสดง
+            } else {
+                droneDetails.classList.add('hidden-field'); // ซ่อน
+            }
+        }
+
+        // ✅ แก้ไข: ฟังก์ชันสำหรับ Toggle ส่วนสัมภาษณ์
+        function toggleInterviewFields() {
+            const interviewQuestions = document.getElementById('interview_questions');
+            const interviewYes = document.getElementById('interview_yes');
+            if (interviewYes.checked) {
+                interviewQuestions.classList.remove('hidden-field'); // แสดง
+            } else {
+                interviewQuestions.classList.add('hidden-field'); // ซ่อน
+            }
+        }
+        
+        // เรียกใช้ฟังก์ชันครั้งแรกเพื่อให้สถานะเริ่มต้นถูกต้อง (ซ่อนทั้งคู่เพราะค่าเริ่มต้นคือ 'ไม่มี/ไม่ต้องการ')
+        document.addEventListener('DOMContentLoaded', () => {
+            toggleDroneLocation();
+            toggleInterviewFields();
+        });
+
+
+        // ฟังก์ชันสร้างข้อความสำหรับคัดลอก (ไม่มีการเปลี่ยนแปลงในตรรกะ)
         function generateOutputText() {
             let output = '--- ✅ ข้อมูล Pre-Wedding Form ✅ ---\n\n';
 
@@ -130,7 +195,11 @@
             output += '=== การใช้งานโดรน ===\n';
             const droneStatus = document.querySelector('input[name="Drone Usage"]:checked').value;
             output += 'ต้องการบินโดรน: ' + droneStatus + '\n';
-            output += 'สถานที่บิน: ' + (document.getElementById('drone_location').value || 'ไม่ได้ระบุ') + '\n\n';
+            if (document.getElementById('drone_yes').checked) {
+                output += 'สถานที่บิน: ' + (document.getElementById('drone_location').value || 'ไม่ได้ระบุ') + '\n\n';
+            } else {
+                output += '\n'; 
+            }
             
             output += '=== เพลงและสไตล์ ===\n';
             output += 'เพลงที่ใช้: ' + (document.getElementById('selected_song').value || 'ไม่ได้ระบุ') + '\n';
@@ -144,17 +213,25 @@
             if (other) styles.push('อื่นๆ: ' + other);
             output += '- ' + (styles.length > 0 ? styles.join(', ') : 'ไม่ได้ระบุ') + '\n\n';
 
-            output += '=== คำถามสัมภาษณ์ ===\n';
-            output += '1. แนะนำตัว:\n' + (document.getElementById('q1').value || 'ไม่ได้ระบุ') + '\n\n';
-            output += '2. ทั้งคู่รู้จักกันได้ยังไง:\n' + (document.getElementById('q2').value || 'ไม่ได้ระบุ') + '\n\n';
-            output += '3. หลังจากนั้นกลายมาเป็นแฟนกันได้ยังไง:\n' + (document.getElementById('q3').value || 'ไม่ได้ระบุ') + '\n\n';
-            output += '4. ทั้งคู่มีความประทับใจอะไรในกันและกัน:\n' + (document.getElementById('q4').value || 'ไม่ได้ระบุ') + '\n\n';
-            output += '5. สุดท้ายนี้ ทั้งคู่มีอะไรอยากจะบอกถึงกันไหม:\n' + (document.getElementById('q5').value || 'ไม่ได้ระบุ') + '\n';
+            output += '=== สัมภาษณ์ ===\n';
+            const interviewStatus = document.querySelector('input[name="Interview Option"]:checked').value;
+            output += 'มีสัมภาษณ์เจ้าบ่าวเจ้าสาวในวิดีโอ Behind the Scene: ' + (interviewStatus.includes('Yes') ? 'มี' : 'ไม่มี') + '\n';
+
+            if (document.getElementById('interview_yes').checked) {
+                output += '--- รายละเอียดสัมภาษณ์ ---\n';
+                output += '1. แนะนำตัว:\n' + (document.getElementById('q1').value || 'ไม่ได้ระบุ') + '\n\n';
+                output += '2. ทั้งคู่รู้จักกันได้ยังไง:\n' + (document.getElementById('q2').value || 'ไม่ได้ระบุ') + '\n\n';
+                output += '3. หลังจากนั้นกลายมาเป็นแฟนกันได้ยังไง:\n' + (document.getElementById('q3').value || 'ไม่ได้ระบุ') + '\n\n';
+                output += '4. ทั้งคู่มีความประทับใจอะไรในกันและกัน:\n' + (document.getElementById('q4').value || 'ไม่ได้ระบุ') + '\n\n';
+                output += '5. สุดท้ายนี้ ทั้งคู่มีอะไรอยากจะบอกถึงกันไหม:\n' + (document.getElementById('q5').value || 'ไม่ได้ระบุ') + '\n';
+            } else {
+                output += '\n'; 
+            }
             
             return output;
         }
 
-        // ฟังก์ชันตรวจสอบความถูกต้อง (เหมือนเดิม)
+        // ฟังก์ชันตรวจสอบความถูกต้อง (ไม่มีการเปลี่ยนแปลง)
         function validateForm() {
              const shootDate = document.getElementById('shoot_date').value.trim();
              const gNick = document.getElementById('groom_nickname').value.trim();
@@ -174,32 +251,27 @@
              return true;
          }
 
-        // 🟢 ฟังก์ชันใหม่: คัดลอกข้อความทั้งหมดไปยัง Clipboard 🟢
+        // ฟังก์ชันคัดลอกข้อความทั้งหมดไปยัง Clipboard (ไม่มีการเปลี่ยนแปลง)
         function handleCopy() {
             if (!validateForm()) {
-                return; // หยุดถ้ากรอกข้อมูลไม่ครบ
+                return;
             }
 
-            // 1. นำข้อมูลไปใส่ใน Textarea ที่ซ่อนไว้
             const textOutput = generateOutputText();
             const hiddenOutput = document.getElementById('hiddenOutput');
             hiddenOutput.value = textOutput;
 
-            // 2. เลือกข้อความทั้งหมด
             hiddenOutput.select();
-            hiddenOutput.setSelectionRange(0, 99999); // สำหรับมือถือ
+            hiddenOutput.setSelectionRange(0, 99999);
 
-            // 3. สั่งคัดลอก (ใช้ document.execCommand('copy') ที่เสถียรกว่าใน In-App Browser เก่า ๆ)
             try {
                 const successful = document.execCommand('copy');
                 if (successful) {
                     alert('✅ ข้อมูลทั้งหมดถูกคัดลอกแล้ว!\n\nกรุณาไปที่แชท LINE แล้วกด "วาง (Paste)" เพื่อส่งข้อมูลครับ/ค่ะ');
                 } else {
-                    // หาก execCommand ล้มเหลว (หายากในปัจจุบัน)
                     alert('⚠️ ไม่สามารถคัดลอกได้อัตโนมัติ กรุณาเลือกข้อความทั้งหมดแล้วคัดลอกด้วยตนเอง');
                 }
             } catch (err) {
-                // หากคัดลอกไม่ได้เลย (เกิดขึ้นได้ในสภาพแวดล้อมที่จำกัดมาก)
                 alert('⚠️ ไม่สามารถคัดลอกได้อัตโนมัติ กรุณาเลือกข้อความทั้งหมดแล้วคัดลอกด้วยตนเอง');
             }
         }
